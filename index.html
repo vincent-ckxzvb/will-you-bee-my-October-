@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Me for a Message</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20%;
+        }
+        #message, #scare {
+            display: none;
+        }
+        #scare {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        #scare img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        audio {
+            display: none;
+        }
+        /* Flashing effect */
+        @keyframes flash {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .flashing {
+            animation: flash 0.1s infinite; /* Fast flashing every 0.1s */
+            filter: brightness(3); /* Very bright effect */
+        }
+        /* Watermark */
+        .watermark {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: white;
+            font-size: 20px;
+            opacity: 0.3;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <h1>Click Me for a Message</h1>
+    <button id="clickMeBtn" style="padding: 10px 20px; font-size: 18px;">Click Me</button>
+    
+    <div id="message">
+        <p>Here’s your message: Stay calm and relaxed...</p>
+    </div>
+
+    <div id="scare">
+        <!-- Replace the src with the direct link to your image -->
+        <img src="https://drive.google.com/uc?export=download&id=1-Xpx6BQC1zEYJJO_6s8B_CG73yxHkpCj" alt="Jump Scare" class="flashing">
+        <!-- Replace the src with the direct link to your audio -->
+        <audio id="scream-sound" src="https://drive.google.com/uc?export=download&id=1-XWN2zBqitEScxR69XsRFZkSA1ohYIQl"></audio>
+    </div>
+
+    <!-- Watermark -->
+    <div class="watermark">Vincent</div>
+
+    <script>
+        // Prevent the user from leaving or closing the page
+        window.onbeforeunload = function() {
+            return "Are you sure you want to leave?";
+        };
+
+        document.getElementById('clickMeBtn').addEventListener('click', function() {
+            // Attempt to set the system volume to max (most browsers will restrict this, but it's simulated)
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 1.0; // Max volume
+
+            // Show the message after clicking the button
+            document.getElementById('message').style.display = 'block';
+            document.getElementById('clickMeBtn').style.display = 'none';
+
+            // Set a timer for the jump scare (1-second delay after the message)
+            setTimeout(function() {
+                document.body.style.backgroundColor = 'black';
+                document.getElementById('message').style.display = 'none';
+
+                // Show the jump scare image with flashing effect
+                document.getElementById('scare').style.display = 'flex';
+
+                // Play the annoying sound
+                const audio = document.getElementById('scream-sound');
+                audio.volume = 1.0; // Try to force maximum volume
+                audio.play();
+
+            }, 1000); // Jump scare appears after 1 second
+
+            // Disable back button
+            window.history.pushState(null, "", window.location.href);
+            window.addEventListener("popstate", function(event) {
+                window.history.pushState(null, "", window.location.href);
+            });
+        });
+    </script>
+</body>
+</html>
